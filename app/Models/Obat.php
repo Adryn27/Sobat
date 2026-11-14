@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\ToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class Obat extends Model
 {
+    use ToTenants;
     protected $table="obat"; 
     protected $guarded = ['id'];
 

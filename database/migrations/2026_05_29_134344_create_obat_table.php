@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('obat', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_obat')->unique();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
+            $table->string('kode_obat');
             $table->string('nama_obat');
             $table->enum('satuan',[0,1,2]); // 0 = Box, 1 = Botol, 2 = Strip
             $table->decimal('harga_offline', 10, 2);
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->foreignId('kategori_id')->constrained('kategori')->onDelete('cascade');
             // $table->foreignId('pemasok_id')->constrained('pemasok')->onDelete('cascade');
             $table->foreignId('pemasok_id')->nullable()->constrained('pemasok')->onDelete('set null');
+            $table->unique(['kode_obat', 'tenant_id']);
             $table->timestamps();
         });
     }

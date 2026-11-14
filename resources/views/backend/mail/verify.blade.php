@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Aktivasi Akun Sapphire Farma</title>
+    <title>Aktivasi Akun {{ $user->tenants->nama_tenant}}</title>
 </head>
 <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #334155; background-color: #f8fafc; margin: 0; padding: 40px 20px;">
     
@@ -14,9 +14,9 @@
                     <tr>
                         <td>
                             <span style="font-size: 22px; font-weight: 700; color: #2563eb; letter-spacing: -0.5px;">
-                                Sapphire Farma
+                                {{ $user->tenants->nama_tenant}}
                             </span>
-                            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Sistem Inventaris Apotek</div>
+                            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Sistem Inventaris Apotek &bull; Sobat</div>
                         </td>
                     </tr>
                 </table>
@@ -28,11 +28,11 @@
                 </h2>
                 
                 <p style="font-size: 15px; color: #334155; margin-bottom: 16px; margin-top: 0;">
-                    Akun Anda telah berhasil didaftarkan oleh Owner ke dalam sistem **Inventaris Sapphire Farma**.
+                    Akun Anda telah berhasil didaftarkan oleh Owner ke dalam sistem <strong>Inventaris {{ $user->tenants->nama_tenant}}.
                 </p>
                 
                 <p style="font-size: 15px; color: #334155; margin-bottom: 30px;">
-                    Langkah terakhir, silakan klik tombol di bawah ini untuk melakukan verifikasi alamat email sekaligus membuat kata sandi (*password*) login Anda sendiri.
+                    Langkah terakhir, silakan klik tombol di bawah ini untuk melakukan verifikasi alamat email sekaligus membuat kata sandi (<em>password</em>) login Anda sendiri.
                 </p>
 
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
@@ -64,7 +64,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td style="font-size: 12px; color: #94a3b8; text-align: center;">
-                            Email keamananan ini dikirim otomatis oleh internal &copy; {{ date('Y') }} Apotek Sapphire Farma.
+                            Email keamananan ini dikirim otomatis oleh internal &copy; {{ date('Y') }} {{ $user->tenants->nama_tenant}}.
                         </td>
                     </tr>
                 </table>

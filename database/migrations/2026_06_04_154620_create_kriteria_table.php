@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('kriteria', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
             $table->decimal('c1_volume', 4, 2)->default(0.40);
             $table->decimal('c2_frekuensi', 4, 2)->default(0.30);
             $table->decimal('c3_rasio', 4, 2)->default(0.30);

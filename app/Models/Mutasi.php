@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\ToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class Mutasi extends Model
 {
+    use ToTenants;
     protected $table='mutasi'; 
     protected $guarded = ['id'];
 

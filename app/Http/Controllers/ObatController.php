@@ -46,7 +46,7 @@ class ObatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_obat'     => 'required|string|unique:obat,kode_obat|max:50',
+            'kode_obat'     => ['required', 'string', Obat::uniqueRule('kode_obat'), 'max:50'],
             'nama_obat'     => 'required|string|max:255',
             'kategori_id'   => 'required|exists:kategori,id',
             'satuan'        => 'required|in:0,1,2',

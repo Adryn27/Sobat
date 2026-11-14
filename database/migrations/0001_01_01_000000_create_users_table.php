@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
             $table->string('nama');
             $table->string('email')->unique();
-            $table->enum('role',[0,1,2,3,4])->default(1); // 0 = SuperAdmin, 1 = Admin, 2 = Pemilik, 3= Apoteker, 4= Kepala Gudang
+            $table->enum('role',[1,2,3,4])->default(2); // 2 = Pemilik, 1 = Admin, 3= Apoteker, 4= Kepala Gudang
             $table->boolean('status')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('verification_token')->nullable();

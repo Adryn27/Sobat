@@ -291,7 +291,7 @@
                 </a>
               </li>
 
-              @if (Auth::user()->role=="0"||Auth::user()->role=="2")
+              @if (Auth::user()->role=="2"||Auth::user()->role=="2")
               <li class="nav-header">OPTION</li>
               <li class="nav-item">
                 <a href="{{ route('backend.user.index') }}" class="nav-link {{ Route::is('backend.user.index') ? 'active' : '' }}">
@@ -302,7 +302,7 @@
                 </a>
               </li>
               @endif
-              @if (Auth::user()->role=="0"||Auth::user()->role=="2"||Auth::user()->role=="3"||Auth::user()->role=="4")
+              @if (Auth::user()->role=="2"||Auth::user()->role=="2"||Auth::user()->role=="3"||Auth::user()->role=="4")
               <li class="nav-header">DATA MANAGEMENT</li>
               <li class="nav-item">
                 <a href="{{ route('backend.category.index') }}" class="nav-link {{ Route::is('backend.category.index') ? 'active' : '' }}">
@@ -329,7 +329,7 @@
                 </a>
               </li>
               @endif
-              @if (Auth::user()->role=="0"||Auth::user()->role=="1")
+              @if (Auth::user()->role=="2"||Auth::user()->role=="1")
               <li class="nav-header">TRANSACTION</li>
               <li class="nav-item">
                 <a href="{{ route('backend.cashier.index') }}" class="nav-link {{ Route::is('backend.cashier.index') ? 'active' : '' }}">
@@ -349,7 +349,7 @@
               </li>
               @endif
               <li class="nav-header">STOCK MANAGEMENT</li>
-              @if (Auth::user()->role=="0"||Auth::user()->role=="1"||Auth::user()->role=="4")
+              @if (Auth::user()->role=="2"||Auth::user()->role=="1"||Auth::user()->role=="4")
               <li class="nav-item">
                 <a href="{{ route('backend.stock.inven') }}" class="nav-link {{ Route::is('backend.stock.inven') ? 'active' : '' }}">
                   <i class="nav-icon bi bi-journal-text"></i>
@@ -359,7 +359,7 @@
                 </a>
               </li>
               @endif
-              @if (Auth::user()->role=="0"||Auth::user()->role=="4")
+              @if (Auth::user()->role=="2"||Auth::user()->role=="4")
               <li class="nav-item">
                 <a href="{{ route('backend.stock.index') }}" class="nav-link {{ Route::is('backend.stock.index') ? 'active' : '' }}">
                   <i class="nav-icon bi-boxes"></i>
@@ -404,7 +404,7 @@
       <!--begin::Footer-->
       <footer class="app-footer">
         <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">Apotek Sapphire Farma</div>
+        <div class="float-end d-none d-sm-inline">{{ Auth::user()->tenants->nama_tenant}}</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>

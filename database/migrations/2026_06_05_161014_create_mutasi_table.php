@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('mutasi', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('obat_id')->constrained('obat')->onDelete('cascade');
             $table->integer('jumlah');

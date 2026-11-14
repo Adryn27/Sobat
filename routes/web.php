@@ -7,6 +7,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MutasiController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PemasokController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SawController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('backend.login');
 });
+
+//Register
+Route::get('/register', [RegisterController::class, 'registerBackend'])->name('backend.register');
+Route::post('/register', [RegisterController::class, 'register'])->name('backend.register.auth');
+Route::get('/register/waiting', [RegisterController::class, 'waitingVerification'])->name('backend.register.waiting');
+Route::get('/register/verify/{token}', [RegisterController::class, 'verifyRegistration'])->name('backend.register.verify');
+Route::delete('/tenant/delete', [RegisterController::class, 'destroyTenant'])->name('backend.tenant.destroy');
+Route::put('/tenant/update', [RegisterController::class, 'updateTenant'])->name('backend.tenant.update');
 
 //Login
 Route::get('/login',[LoginController::class,'loginBackend'])->name('backend.login');

@@ -4,18 +4,21 @@ namespace App\Services;
 
 use App\Models\Kriteria;
 use App\Models\Obat;
+use Illuminate\Support\Facades\Auth;
+
 // use Illuminate\Support\Facades\DB;
 
 class SawService
 {
     public function calculateSAW($days = 30)
     {
+        $user = Auth::user();
         $startDate = now()->subDays($days);
 
         // $obats = Obat::with(['detailPenjualan' => function ($q) use ($startDate) {
         //     $q->where('created_at', '>=', $startDate);
         // }])->get();
-        $obats = Obat::with([
+        $obats = Obat::where('tenant_id', $user->tenant_id)->with([
             'detailPenjualan' => function ($q) use ($startDate) {
                 $q->whereHas('penjualan', function ($query) use ($startDate) {
                     $query->where('created_at', '>=', $startDate);
@@ -23,7 +26,7 @@ class SawService
             }
         ])->get();
 
-        $bobot = Kriteria::first();
+        $bobot = Kriteria::where('tenant_id', $user->tenant_id)->first();
 
         $matrix = [];
 
@@ -71,15 +74,14 @@ class SawService
             $r3 = $m['c3'] > 0 ? ($minC3 / $m['c3']) : 1;
 
             // NILAI AKHIR
-            $saw =
-                ($r1 * $bobot->c1_volume) +
-                ($r2 * $bobot->c2_frekuensi) +
-                ($r3 * $bobot->c3_rasio);
+            $saw =  ($r1 * $bobot->c1_volume) +
+                    ($r2 * $bobot->c2_frekuensi) +
+                    ($r3 * $bobot->c3_rasio);
 
             $obat->update([
                 'nilai_saw' => $saw
             ]);
         }
-        return $obat;
+        return $obats;
     }
 }

@@ -58,9 +58,7 @@
                           <td>{{ $row->nama }}</td>
                           <td>
                               @if ($row->role == 1)
-                                  <span class="badge bg-secondary" style="color: white">Admin</span>    
-                              @elseif ($row->role == 0)
-                                  <span class="badge bg-primary" style="color: white">SuperAdmin</span>    
+                                  <span class="badge bg-secondary" style="color: white">Admin</span>      
                               @elseif ($row->role == 2)
                                   <span class="badge bg-warning" style="color: white">Pemilik</span>    
                               @elseif ($row->role == 3)
@@ -136,9 +134,7 @@
                                 <label>Role <span class="text-danger">*</span></label>
                                 <select name="role" class="form-control @error('role') is-invalid @enderror">
                                     <option value="" {{ old('role') == '' ? 'selected' : '' }}>- Pilih Role -</option>
-                                    <option value="0" {{ old('role') == '0' ? 'selected' : '' }}>SuperAdmin</option>
                                     <option value="1" {{ old('role') == '1' ? 'selected' : '' }}>Admin</option>
-                                    <option value="2" {{ old('role') == '2' ? 'selected' : '' }}>Pemilik</option>
                                     <option value="3" {{ old('role') == '3' ? 'selected' : '' }}>Apoteker</option>
                                     <option value="4" {{ old('role') == '4' ? 'selected' : '' }}>Kepala gudang</option>
                                 </select>
@@ -248,9 +244,7 @@
                                     <label>Role <span class="text-danger">*</span></label>
                                     <select name="role" class="form-control @error('role') is-invalid @enderror">
                                         <option value="" {{ old('role', $row->role) == '' ? 'selected' : '' }}>- Pilih Role -</option>
-                                        <option value="0" {{ old('role', $row->role) == '0' ? 'selected' : '' }}>SuperAdmin</option>
                                         <option value="1" {{ old('role', $row->role) == '1' ? 'selected' : '' }}>Admin</option>
-                                        <option value="2" {{ old('role', $row->role) == '2' ? 'selected' : '' }}>Pemilik</option>
                                         <option value="3" {{ old('role', $row->role) == '3' ? 'selected' : '' }}>Apoteker</option>
                                         <option value="4" {{ old('role', $row->role) == '4' ? 'selected' : '' }}>Kepala gudang</option>
                                     </select>

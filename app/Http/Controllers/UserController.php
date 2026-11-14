@@ -20,7 +20,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user=User::orderby('updated_at','desc')->get();
+        $tenantId = Auth::user()->tenant_id;
+        $user=User::where('tenant_id', $tenantId)->where('role', '!=', '2')->orderby('updated_at','desc')->get();
         return view('backend.layout.v_user.index', [
             'judul'=>'User',
             'subjudul'=>'Daftar Pengguna',
@@ -44,7 +45,7 @@ class UserController extends Controller
         $request->validate([
             'nama' => 'required',
             'email' => 'required|email|unique:users',
-            'role' => 'required',
+            'role' => 'required|in:1,2,3,4',
             'foto'=>'image|mimes:jpeg,jpg,png,gif|file|max:1024'
         ],
         $message=[
@@ -73,6 +74,7 @@ class UserController extends Controller
     
         // simpan user
         $user = User::create([
+            'tenant_id' => Auth::user()->tenant_id,
             'nama' => $request->nama,    
             'email' => $request->email,   
             'role' => $request->role,    
@@ -82,6 +84,7 @@ class UserController extends Controller
             'verification_token' => $token
         ]);
     
+        $user->load('tenants');
         // kirim email
         Mail::to($user->email)
             ->send(
@@ -115,7 +118,7 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user=User::findOrFail($id);
+        $user=User::where('tenant_id', Auth::user()->tenant_id)->findOrFail($id);
         if(Auth::id() == $id){
 
             return back()->with(
@@ -125,7 +128,7 @@ class UserController extends Controller
         }
         $rules=[
             'nama'=>'required|max:255',
-            'role'=>'required',
+            'role'=>'required|in:1,2,3,4',
             'status'=>'required',
             'foto'=>'image|mimes:jpeg,jpg,png,gif|file|max:1024'
         ];
@@ -163,7 +166,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user= User::findOrFail($id);
+        $user= User::where('tenant_id', Auth::user()->tenant_id)->findOrFail($id);
         if(Auth::id() == $id){
 
             return back()->with(
@@ -183,7 +186,7 @@ class UserController extends Controller
 
     public function verifikasiUlang($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('tenant_id', Auth::user()->tenant_id)->with('tenants')->findOrFail($id);
 
         $user->update([
             'verification_token' => Str::random(60),
@@ -206,7 +209,7 @@ class UserController extends Controller
 
     public function linkReset($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('tenant_id', Auth::user()->tenant_id)->findOrFail($id);
         if ($user->status == 0 || is_null($user->email_verified_at)) {
             return redirect()->back()->with('error', 'Gagal! Akun ' . $user->nama . ' belum melakukan verifikasi awal dan pembuatan kata sandi pertama kali.');
         }
@@ -232,4 +235,5 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Gagal mengirim email. Periksa setelan SMTP sistem Anda. Rincian: ' . $e->getMessage());
         }
     }
+
 }

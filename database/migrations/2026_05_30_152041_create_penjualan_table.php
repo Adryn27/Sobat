@@ -13,17 +13,20 @@ return new class extends Migration
     {
         Schema::create('penjualan', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->string('no_invoice')->unique();
+            $table->string('no_invoice');
             $table->integer('total_harga');
             $table->integer('bayar');
             $table->integer('kembali');
             $table->enum('jenis_penjualan',[0,1])->default('0'); // 0 = Offline, 1 = Online
+            $table->unique(['no_invoice', 'tenant_id']);
             $table->timestamps();
         });
 
         Schema::create('detail_penjualan', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
             $table->foreignId('penjualan_id')->constrained('penjualan')->onDelete('cascade');
             $table->foreignId('obat_id')->constrained('obat');
             $table->integer('harga_jual');

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\ToTenants;
 use Illuminate\Database\Eloquent\Model;
 
 class DetailPenjualan extends Model
 {
+    use ToTenants;
     protected $table="detail_penjualan"; 
     protected $guarded = ['id'];
 

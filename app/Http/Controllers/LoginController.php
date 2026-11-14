@@ -24,7 +24,7 @@ class LoginController extends Controller
             'password'=> 'required'
         ]);
 
-        $user = User::where(
+        $user = User::with('tenants')->where(
             'email',
             $request->email
         )->first();
@@ -42,6 +42,10 @@ class LoginController extends Controller
         if($user->status == 0){
 
             return back()->withErrors(['email' => 'Akun belum aktif'])->withInput();
+        }
+
+        if ($user->tenant_id && (!$user->tenants || !$user->tenants->status)) {
+            return back()->withErrors(['email' => 'Akun apotek Anda belum aktif.'])->withInput();
         }
 
         if(Auth::attempt($credentials)){
@@ -121,9 +125,14 @@ class LoginController extends Controller
             'verification_token' => null
         ]);
 
-        return redirect(
-            route('backend.login')
-        );
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route('backend.beranda')
+            ->with('success', 'Akun berhasil diaktifkan! Selamat datang di ' . ($user->tenants->nama_tenant) . '.');
+        // return redirect(
+        //     route('backend.login')
+        // );
     }
 
     public function logoutBackend(){

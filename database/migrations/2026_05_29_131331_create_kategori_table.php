@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('kategori', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kategori')->unique();
+            $table->foreignId('tenant_id')->nullable()->constrained('tenants')->onDelete('cascade');
+            $table->string('nama_kategori');
+            $table->unique(['nama_kategori', 'tenant_id']);
             $table->timestamps();
         });
     }

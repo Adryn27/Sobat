@@ -6,6 +6,7 @@ use App\Models\Kriteria;
 use App\Models\Obat;
 use Illuminate\Http\Request;
 use App\Services\SawService;
+use Illuminate\Support\Facades\Auth;
 
 class SawController extends Controller
 {
@@ -20,12 +21,13 @@ class SawController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
         $days = $request->days ?? 30;
         $this->sawService->calculateSAW($days);
 
         $startDate = now()->subDays($days);
 
-        $index = Obat::with([
+        $index = Obat::where('tenant_id', $user->tenant_id)->with([
             'detailPenjualan' => function ($q) use ($startDate) {
                 $q->whereHas('penjualan', function ($query) use ($startDate) {
                     $query->where('created_at', '>=', $startDate);
@@ -34,7 +36,7 @@ class SawController extends Controller
         ])
         ->orderByDesc('nilai_saw')
         ->get();
-        $kriteria = Kriteria::first();
+        $kriteria = Kriteria::where('tenant_id', $user->tenant_id)->first();
 
         return view('backend.layout.v_analisis.index', [
             'judul' => 'Analytics',
@@ -82,6 +84,7 @@ class SawController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $user = Auth::user();
         $request->validate([
             'c1_volume' => 'required|numeric|min:0|max:1',
             'c2_frekuensi' => 'required|numeric|min:0|max:1',
@@ -101,7 +104,7 @@ class SawController extends Controller
             );
         }
         
-        Kriteria::where('id', 1)->update([
+        Kriteria::where('tenant_id', $user->tenant_id)->update([
             'c1_volume' => $request->c1_volume,
             'c2_frekuensi' => $request->c2_frekuensi,
             'c3_rasio' => $request->c3_rasio,

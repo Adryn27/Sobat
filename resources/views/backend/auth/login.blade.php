@@ -222,12 +222,109 @@
                       <i class="fa-solid fa-right-to-bracket" style="font-size: 0.75rem;"></i>
                       <span>Masuk</span>
                   </button>
+                  <button type="button" 
+                        class="btn btn-secondary w-100 fw-semibold py-2.5 rounded-3 d-flex align-items-center justify-content-center gap-2 shadow-sm mt-2"
+                        style="font-size: 0.875rem;"
+                        data-bs-toggle="modal" data-bs-target="#demoAccountsModal">
+                        <i class="fa-solid fa-id-card" style="font-size: 0.75rem;"></i>
+                        <span>Akun Demo</span>
+                    </button>
                 </form>
 
                 <div class="mt-4 pt-4 border-top border-light text-center">
-                    <p class="small text-muted mb-0" style="font-size: 0.75rem;">Kendala akses atau akun staf baru? <a href="#" class="text-primary fw-semibold text-decoration-none">Hubungi Pemilik</a></p>
+                    <p class="small text-muted mb-0" style="font-size: 0.75rem;">Belum memiliki akun apotek? <a href="{{ route('backend.register') }}" class="text-primary fw-semibold text-decoration-none">Register</a></p>
                 </div>
 
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="demoAccountsModal" tabindex="-1" aria-labelledby="demoAccountsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header text-white rounded-top-4 py-3" style="background-color: #2563eb;">
+                    <h5 class="modal-title fw-bold fs-6" id="demoAccountsModalLabel">
+                        <i class="fa-solid fa-shield-halved me-2"></i> Pilih Akun Demo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="alert alert-danger border border-danger-subtle small mb-3 py-2 px-3 rounded-3 bg-danger-subtle bg-opacity-10">
+                        <i class="fa-solid fa-triangle-exclamation text-danger me-1"></i> 
+                        <span class="text-danger fw-semibold">Seluruh akun demo menggunakan kata sandi yang sama:</span> 
+                        <div class="ms-4 mt-2">
+                            <span class="px-3 py-1.5 bg-white border border-danger-subtle rounded-5 text-danger fw-bold d-inline-block shadow-sm" style="font-size: 0.95rem;">
+                                Sobat#1
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-column gap-2.5">
+                        
+                        <!-- Item 1: Pemilik -->
+                        <div class="demo-card-item p-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="badge bg-success mb-1" style="font-size: 0.7rem;">Pemilik</span>
+                                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Pemilik Sobat</div>
+                                <div class="text-muted small" style="font-size: 0.8rem;"><i class="fa-regular fa-envelope me-1"></i> sobat@gmail.com</div>
+                            </div>
+                            <button class="btn btn-sm btn-primary px-3 fill-credentials" style="background-color: #2563eb;" data-email="sobat@gmail.com" data-password="Sobat#1" style="font-size: 0.8rem;">
+                                Pilih
+                            </button>
+                        </div>
+
+                        <!-- Item 2: Admin -->
+                        <div class="demo-card-item p-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="badge bg-primary mb-1" style="font-size: 0.7rem;">Admin (Kasir)</span>
+                                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Admin Sobat</div>
+                                <div class="text-muted small" style="font-size: 0.8rem;"><i class="fa-regular fa-envelope me-1"></i> admin@gmail.com</div>
+                            </div>
+                            <button class="btn btn-sm btn-primary px-3 fill-credentials" style="background-color: #2563eb;" data-email="admin@gmail.com" data-password="Sobat#1" style="font-size: 0.8rem;">
+                                Pilih
+                            </button>
+                        </div>
+
+                        <!-- Item 3: Apoteker -->
+                        <div class="demo-card-item p-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="badge bg-info text-dark mb-1" style="font-size: 0.7rem;">Apoteker</span>
+                                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Apoteker Sobat</div>
+                                <div class="text-muted small" style="font-size: 0.8rem;"><i class="fa-regular fa-envelope me-1"></i> apoteker@gmail.com</div>
+                            </div>
+                            <button class="btn btn-sm btn-primary px-3 fill-credentials" style="background-color: #2563eb;" data-email="apoteker@gmail.com" data-password="Sobat#1" style="font-size: 0.8rem;">
+                                Pilih
+                            </button>
+                        </div>
+
+                        <!-- Item 4: Gudang -->
+                        <div class="demo-card-item p-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="badge bg-warning text-dark mb-1" style="font-size: 0.7rem;">Gudang</span>
+                                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Gudang Sobat</div>
+                                <div class="text-muted small" style="font-size: 0.8rem;"><i class="fa-regular fa-envelope me-1"></i> gudang@gmail.com</div>
+                            </div>
+                            <button class="btn btn-sm btn-primary px-3 fill-credentials" style="background-color: #2563eb;" data-email="gudang@gmail.com" data-password="Sobat#1" style="font-size: 0.8rem;">
+                                Pilih
+                            </button>
+                        </div>
+
+                        <!-- Item 5: Tenant 2 -->
+                        <div class="demo-card-item p-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <span class="badge bg-secondary mb-1" style="font-size: 0.7rem;">Apotek Lain (Pemilik)</span>
+                                <div class="fw-bold text-dark" style="font-size: 0.875rem;">Budi Santoso</div>
+                                <div class="text-muted small" style="font-size: 0.8rem;"><i class="fa-regular fa-envelope me-1"></i> budi@gmail.com</div>
+                            </div>
+                            <button class="btn btn-sm btn-primary px-3 fill-credentials" style="background-color: #2563eb;" data-email="budi@gmail.com" data-password="Sobat#1" style="font-size: 0.8rem;">
+                                Pilih
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer bg-light rounded-bottom-4 py-2">
+                    <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal" style="font-size: 0.8rem;">Tutup</button>
+                </div>
             </div>
         </div>
     </div>
@@ -254,6 +351,24 @@
                 eyeIcon.classList.add('fa-regular', 'fa-eye');
             }
         });
+        document.querySelectorAll('.fill-credentials').forEach(button => {
+        button.addEventListener('click', function() {
+            // Ambil data email dan password dari atribut tombol
+            const email = this.getAttribute('data-email');
+            const password = this.getAttribute('data-password');
+
+            // Masukkan ke input form login
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+
+            // Tutup modal secara otomatis (Form TIDAK akan disubmit, user bebas meninjau dulu)
+            const modalEl = document.getElementById('demoAccountsModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) {
+                modal.hide();
+            }
+        });
+    });
     </script>
     @if (session('error'))
     <script>

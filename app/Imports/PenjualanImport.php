@@ -91,28 +91,44 @@ class PenjualanImport implements ToCollection, WithHeadingRow
                     $grandTotalExcel = $totalHargaTransaksi;
                 }
 
-                $penjualan = Penjualan::where('no_invoice', $noInvoice)->first();
+                $penjualan = Penjualan::where('no_invoice', $noInvoice)->where('tenant_id', Auth::user()->tenant_id)->first();
 
-                if (!$penjualan) {
-                    $penjualan = Penjualan::create([
-                        'user_id'         => Auth::id(), 
-                        'no_invoice'      => $noInvoice, 
-                        'total_harga'     => $totalHargaTransaksi,
-                        'bayar'           => $grandTotalExcel, 
-                        'kembali'         => 0, 
-                        'jenis_penjualan' => '1', 
-                        'created_at'      => $tanggalTransaksi, 
-                        'updated_at'      => $tanggalTransaksi,
-                    ]);
-                    $invoiceBaru++;
-                } else {
-                    $penjualan->update([
-                        'total_harga' => $totalHargaTransaksi,
-                        'bayar'       => $grandTotalExcel,
-                        'created_at'  => $tanggalTransaksi, 
-                    ]);
-                    $invoiceDiupdate++;
+                if ($penjualan) {
+                    continue; 
                 }
+                
+                $penjualan = Penjualan::create([
+                    'tenant_id'       => Auth::user()->tenant_id, 
+                    'user_id'         => Auth::id(), 
+                    'no_invoice'      => $noInvoice, 
+                    'total_harga'     => $totalHargaTransaksi,
+                    'bayar'           => $grandTotalExcel, 
+                    'kembali'         => 0, 
+                    'jenis_penjualan' => '1', 
+                    'created_at'      => $tanggalTransaksi, 
+                    'updated_at'      => $tanggalTransaksi,
+                ]);
+                $invoiceBaru++;
+                // if (!$penjualan) {
+                //     $penjualan = Penjualan::create([
+                //         'user_id'         => Auth::id(), 
+                //         'no_invoice'      => $noInvoice, 
+                //         'total_harga'     => $totalHargaTransaksi,
+                //         'bayar'           => $grandTotalExcel, 
+                //         'kembali'         => 0, 
+                //         'jenis_penjualan' => '1', 
+                //         'created_at'      => $tanggalTransaksi, 
+                //         'updated_at'      => $tanggalTransaksi,
+                //     ]);
+                //     $invoiceBaru++;
+                // } else {
+                //     $penjualan->update([
+                //         'total_harga' => $totalHargaTransaksi,
+                //         'bayar'       => $grandTotalExcel,
+                //         'created_at'  => $tanggalTransaksi, 
+                //     ]);
+                //     $invoiceDiupdate++;
+                // }
 
                 foreach ($items as $item) {
                     $rawSku = $item['merchant_sku'] ?? $item['merchantsku'] ?? $item['kode_obat'] ?? null;

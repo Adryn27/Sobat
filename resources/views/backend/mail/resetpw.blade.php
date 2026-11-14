@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Atur Ulang Kata Sandi - Apotek Sapphire Farma</title>
+    <title>Atur Ulang Kata Sandi - {{ $user->tenants->nama_tenant}}</title>
 </head>
 <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #334155; background-color: #f8fafc; margin: 0; padding: 40px 20px;">
     
@@ -14,9 +14,9 @@
                     <tr>
                         <td>
                             <span style="font-size: 22px; font-weight: 700; color: #2563eb; letter-spacing: -0.5px;">
-                                Sapphire Farma
+                                {{ $user->tenants->nama_tenant}}
                             </span>
-                            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Sistem Inventaris Apotek</div>
+                            <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Sistem Inventaris Apotek &bull; Sobat</div>
                         </td>
                     </tr>
                 </table>
@@ -28,7 +28,7 @@
                 </h2>
                 
                 <p style="font-size: 15px; color: #334155; margin-bottom: 16px; margin-top: 0;">
-                    Owner Apotek Sapphire Farma telah mengirimkan tautan untuk melakukan **pengaturan ulang (reset) kata sandi** akun Anda.
+                    Owner {{ $user->tenants->nama_tenant}} telah mengirimkan tautan untuk melakukan **pengaturan ulang (reset) kata sandi** akun Anda.
                 </p>
                 
                 <p style="font-size: 15px; color: #334155; margin-bottom: 30px;">
@@ -64,7 +64,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tr>
                         <td style="font-size: 12px; color: #94a3b8; text-align: center;">
-                            Email keamananan ini dikirim otomatis oleh internal &copy; {{ date('Y') }} Apotek Sapphire Farma.
+                            Email keamananan ini dikirim otomatis oleh internal &copy; {{ date('Y') }} {{ $user->tenants->nama_tenant}}.
                         </td>
                     </tr>
                 </table>
