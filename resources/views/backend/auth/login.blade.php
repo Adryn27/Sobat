@@ -8,7 +8,7 @@
         rel="icon"
         type="image/jpg"
         sizes="32x32"
-        href="{{ asset('Img/LogoB.jpg') }}"
+        href="{{ asset('Img/logo Sobat.png') }}"
     />
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -139,8 +139,8 @@
                       <img src="{{ asset('Img/logo.png') }}" alt="Sapphire Farma Logo" class="img-fluid rounded-circle" style="max-width: 70%; height: auto;">
                     </div>
                     <div>
-                        <h1 class="fw-bold fs-5 mb-0 tracking-wide">Apotek Sapphire Farma</h1>
-                        <p class="small text-white-50 mb-0" style="font-size: 0.75rem;">Sistem Invetaris Apotek</p>
+                        <h1 class="fw-bold fs-5 mb-0 tracking-wide">SOBAT</h1>
+                        <p class="small text-white-50 mb-0" style="font-size: 0.75rem;">Sistem Operasional Barang Apotek Terintegrasi</p>
                     </div>
                 </div>
 
@@ -150,15 +150,24 @@
                     <p class="small text-white-50 lh-base mb-0">Pantau ketersediaan obat dan transaksi apotek dalam satu dashboard terintegrasi.</p>
                 </div>
 
-                <p class="small text-white-50 mb-0 position-relative z-1" style="font-size: 0.75rem;">&copy; 2026 Sapphire Farma. All rights reserved.</p>
+                <p class="small text-white-50 mb-0 position-relative z-1" style="font-size: 0.75rem;">&copy; 2026 Sobat Apotek. All rights reserved.</p>
             </div>
 
             <div class="col-md-6 p-4 p-sm-5 d-flex flex-column justify-content-center glass-card bg-white rounded-end-4">
                 
                 <div class="mb-4">
-                    <div class="d-md-none d-flex align-items-center gap-2 mb-3">
-                        <i class="fa-solid fa-mortar-pestle fs-4 text-primary"></i>
-                        <span class="fw-bold fs-5 text-dark">Sapphire Farma</span>
+                    <div class="d-md-none d-flex align-items-center gap-3 mb-4">
+                        <img src="{{ asset('Img/logo Sobat.png') }}" 
+                             alt="Logo Sobat" 
+                             style="width: 48px; height: 48px; object-fit: contain;">
+                        {{-- <div style="width: 2px; height: 42px; background-color: #0b2d48; border-radius: 2px;"></div> --}}
+                        {{-- <div class="vr" style="width: 2px; background-color: #149c96; opacity: 1;"></div> --}}
+                        <div>
+                            <h4 class="fw-bold fs-5 mb-0 tracking-wide" style="color: #0b2d48;">SOBAT</h4>
+                            <small class="text-muted d-block" style="font-size: 0.75rem; line-height: 1.2;">
+                                Sistem Operasional Barang Apotek Terintegrasi
+                            </small>
+                        </div>
                     </div>
                     <h3 class="fw-bold text-dark mb-1 fs-4">Selamat Datang Kembali</h3>
                     <p class="small text-muted mb-0">Silakan masuk untuk mengelola inventaris apotek.</p>
@@ -178,7 +187,7 @@
                           <input type="email" id="email" name="email" required
                               class="form-control input-field-custom @error('email') is-invalid @enderror"
                               style="padding-right: 40px !important;" 
-                              placeholder="nama@sapphirefarma.com"
+                              placeholder="sobat@gmail.com"
                               value="{{ old('email') }}">
                       </div>
               

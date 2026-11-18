@@ -113,9 +113,17 @@
     {{-- TABLE --}}
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white fw-bold">
-            Ranking SAW
+            Ranking SAW (Top 10 Prioritas)
         </div>
 
+        <div class="card-body pb-2 pt-3">
+            <div class="alert alert-info border-0 bg-info-subtle text-dark d-flex align-items-center mb-2 py-2 px-3" role="alert" style="font-size: 0.85rem;">
+                <i class="bi bi-info-circle-fill text-info fs-5 me-2"></i>
+                <div>
+                    <strong>Catatan Sistem:</strong> Daftar peringkat di bawah merupakan <strong>rekomendasi prioritas</strong> berdasarkan perhitungan metode <em>Simple Additive Weighting</em> (SAW). Keputusan akhir pengadaan stok (<em>restock</em>) tetap disesuaikan dengan kebijakan serta pertimbangan pihak apotek.
+                </div>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover text-center align-middle mb-0">
                 <thead class="table-light small">
@@ -125,7 +133,7 @@
                         <th>Volume</th>
                         <th>Frekuensi</th>
                         <th>Stok</th>
-                        <th>SAW</th>
+                        <th>Score</th>
                         <th>Status</th>
                     </tr>
                 </thead>

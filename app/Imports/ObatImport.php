@@ -4,9 +4,9 @@ namespace App\Imports;
 
 use App\Models\Obat;
 use App\Models\Kategori;
-use App\Models\Mutasi;
+// use App\Models\Mutasi;
 use App\Models\Pemasok;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -39,41 +39,41 @@ class ObatImport implements ToModel, WithHeadingRow, WithValidation, SkipsEmptyR
 
         $hargaOffline = $row['base_price_offline'] ?? $row['base_price'] ?? $row['harga_offline'] ?? 0;
         $hargaOnline  = $row['selling_price_online'] ?? $row['selling_price'] ?? $row['harga_online'] ?? 0;
-        $stokExcel    = (int)($row['stock_available'] ?? $row['stock'] ?? $row['stok_sekarang'] ?? $row['stok'] ?? 0);
+        // $stokExcel    = (int)($row['stock_available'] ?? $row['stock'] ?? $row['stok_sekarang'] ?? $row['stok'] ?? 0);
         
-        $inputMax = (int)($row['max_stock_limit'] ?? $row['stok_maksimal'] ?? 100);
-        $stokMaxInput = ($inputMax < $stokExcel) ? $stokExcel : $inputMax;
+        // $inputMax = (int)($row['max_stock_limit'] ?? $row['stok_maksimal'] ?? 100);
+        // $stokMaxInput = ($inputMax < $stokExcel) ? $stokExcel : $inputMax;
         // $stokMaxInput = ($inputMax > 100) ? $inputMax : $stokExcel;
 
         $obatExisting = Obat::where('kode_obat', $kodeObat)->first();
 
         if ($obatExisting) {
-            $stokLama = $obatExisting->stok;
+            // $stokLama = $obatExisting->stok;
             
-            $stokMaxBaru = max($obatExisting->stok_maksimal, $stokMaxInput, $stokExcel);
+            // $stokMaxBaru = max($obatExisting->stok_maksimal, $stokMaxInput, $stokExcel);
 
             $obatExisting->update([
                 'nama_obat'     => $namaObat,
                 'satuan'        => $satuanEnum,
                 'harga_offline' => $hargaOffline > 0 ? $hargaOffline : $obatExisting->harga_offline,
                 'harga_online'  => $hargaOnline > 0 ? $hargaOnline : $obatExisting->harga_online,
-                'stok'          => $stokExcel,
-                'stok_maksimal' => $stokMaxBaru,
+                // 'stok'          => $stokExcel,
+                // 'stok_maksimal' => $stokMaxBaru,
                 'kategori_id'   => $kategori->id,
                 'pemasok_id'    => $pemasokId,
             ]);
 
-            if ($stokLama != $stokExcel) {
-                Mutasi::create([
-                    'obat_id'      => $obatExisting->id,
-                    'user_id'      => Auth::id() ?? 1,
-                    'jumlah'       => abs($stokExcel - $stokLama),
-                    'jenis'        => ($stokExcel > $stokLama) ? 'masuk' : 'keluar',
-                    'stok_sebelum' => $stokLama,
-                    'stok_sesudah' => $stokExcel,
-                    'catatan'      => 'Update Stok via Import',
-                ]);
-            }
+            // if ($stokLama != $stokExcel) {
+            //     Mutasi::create([
+            //         'obat_id'      => $obatExisting->id,
+            //         'user_id'      => Auth::id() ?? 1,
+            //         'jumlah'       => abs($stokExcel - $stokLama),
+            //         'jenis'        => ($stokExcel > $stokLama) ? 'masuk' : 'keluar',
+            //         'stok_sebelum' => $stokLama,
+            //         'stok_sesudah' => $stokExcel,
+            //         'catatan'      => 'Update Stok via Import',
+            //     ]);
+            // }
             $this->counter['updated']++;
             return null;
         }
@@ -84,23 +84,23 @@ class ObatImport implements ToModel, WithHeadingRow, WithValidation, SkipsEmptyR
             'satuan'        => $satuanEnum,
             'harga_offline' => $hargaOffline,
             'harga_online'  => $hargaOnline,
-            'stok'          => $stokExcel,
-            'stok_maksimal' => max($stokMaxInput, $stokExcel),
+            // 'stok'          => $stokExcel,
+            // 'stok_maksimal' => max($stokMaxInput, $stokExcel),
             'kategori_id'   => $kategori->id,
             'pemasok_id'    => $pemasokId,
         ]);
 
-        if ($stokExcel > 0) {
-            Mutasi::create([
-                'obat_id'      => $obatBaru->id,
-                'user_id'      => Auth::id() ?? 1,
-                'jumlah'       => $stokExcel,
-                'jenis'        => 'masuk',
-                'stok_sebelum' => 0,
-                'stok_sesudah' => $stokExcel,
-                'catatan'      => 'Stok Awal Import',
-            ]);
-        }
+        // if ($stokExcel > 0) {
+        //     Mutasi::create([
+        //         'obat_id'      => $obatBaru->id,
+        //         'user_id'      => Auth::id() ?? 1,
+        //         'jumlah'       => $stokExcel,
+        //         'jenis'        => 'masuk',
+        //         'stok_sebelum' => 0,
+        //         'stok_sesudah' => $stokExcel,
+        //         'catatan'      => 'Stok Awal Import',
+        //     ]);
+        // }
 
         $this->counter['created']++;
         return null;

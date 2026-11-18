@@ -25,4 +25,9 @@ class Mutasi extends Model
     {
         return $this->belongsTo(Penjualan::class, 'penjualan_id'); // Sesuaikan foreign key
     }
+
+    public function batchObat()
+    {
+        return $this->belongsTo(BatchObat::class, 'batch_obat_id');
+    }
 }

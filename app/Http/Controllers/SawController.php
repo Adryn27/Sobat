@@ -35,6 +35,7 @@ class SawController extends Controller
             }
         ])
         ->orderByDesc('nilai_saw')
+        ->take(10)
         ->get();
         $kriteria = Kriteria::where('tenant_id', $user->tenant_id)->first();
 

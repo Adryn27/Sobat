@@ -15,6 +15,15 @@
     }
 </style>
 
+@if(Auth::user()->role == '2' && Auth::user()->tenants && !Auth::user()->tenants->status)
+    <div class="alert alert-warning d-flex align-items-center justify-content-between shadow-sm" role="alert">
+        <div>
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Perhatian:</strong> Status apotek Anda saat ini sedang <b>Nonaktif</b>. Staf/Admin tidak dapat mengakses sistem sampai Anda mengaktifkannya kembali.
+        </div>
+        <a href="{{ route('backend.profile') }}" class="btn btn-sm btn-warning">Kelola Status</a>
+    </div>
+@endif
 <div class="container-fluid py-4">
     <div class="mb-4">
         {{-- BARIS JUDUL --}}

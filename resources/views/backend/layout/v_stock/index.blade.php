@@ -103,6 +103,164 @@
             <form action="{{ route('backend.stock.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
+                    {{-- Pilih Obat --}}
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Pilih Obat <span class="text-danger">*</span></label>
+                        <select id="obatSelect" name="obat_id" class="form-select" required>
+                            <option value="">-- Pilih Obat --</option>
+                            @foreach ($obat as $o)
+                                <option value="{{ $o->id }}" {{ (old('obat_id', $prefill['obat_id'] ?? '') == $o->id) ? 'selected' : '' }}>
+                                    {{ $o->nama_obat }} (Stok Total: {{ $o->stok }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Jenis Mutasi --}}
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Jenis Mutasi <span class="text-danger">*</span></label>
+                        <select id="jenisMutasiSelect" name="jenis" class="form-select" required>
+                            <option value="masuk">Masuk (Restock)</option>
+                            <option value="keluar" selected>Keluar (Rusak/Kadaluarsa)</option>
+                            <option value="opname">Opname (Koreksi Fisik)</option>
+                        </select>
+                    </div>
+
+                    {{-- CONTAINER BATCH BARU (Untuk Masuk) --}}
+                    <div id="batchBaruContainer" style="display: none;">
+                        <div class="alert alert-warning text-dark py-2 small">
+                            <i class="fas fa-exclamation-triangle"></i> Masukkan nomor batch dan tanggal expired sesuai fisik dari distributor/pengiriman.
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="fw-bold">Nomor Batch Baru <span class="text-danger">*</span></label>
+                            <input type="text" name="nomor_batch" id="inputNomorBatch" class="form-control" placeholder="Contoh: BATCH-20261115-01">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="fw-bold">Tanggal Kedaluwarsa <span class="text-danger">*</span></label>
+                            <input type="date" name="expired_date" id="inputExpiredDate" class="form-control">
+                        </div>
+                    </div>
+
+                    {{-- CONTAINER PILIH BATCH (Khusus untuk Keluar) --}}
+                    <div id="pilihBatchContainer">
+                        <div class="alert alert-danger py-2 small">
+                            <i class="fas fa-info-circle"></i> Pilih nomor batch spesifik yang ingin dikeluarkan (misal: barang rusak atau kadaluarsa).
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="fw-bold">Pilih Nomor Batch <span class="text-danger">*</span></label>
+                            <select name="batch_obat_id" id="batchDropdown" class="form-select" required>
+                                <option value="">-- Pilih Obat Terlebih Dahulu --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- Jumlah --}}
+                    <div class="form-group mb-3">
+                        <label class="fw-bold" id="labelJumlah">Jumlah <span class="text-danger">*</span></label>
+                        <input type="number" name="jumlah" class="form-control" value="{{ old('jumlah', $prefill['jumlah'] ?? '') }}" placeholder="Masukkan jumlah..." required min="1">
+                    </div>
+
+                    {{-- Catatan --}}
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Catatan</label>
+                        <textarea name="catatan" class="form-control" placeholder="Contoh: Kadaluarsa, rusak di gudang, dll"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Mutasi</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Simpan semua data batch ke dalam variabel JavaScript global secara aman --}}
+<script>
+    const semuaBatch = @json($batches);
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const jenisMutasiSelect = document.getElementById('jenisMutasiSelect');
+        const batchBaruContainer = document.getElementById('batchBaruContainer');
+        const pilihBatchContainer = document.getElementById('pilihBatchContainer');
+        const inputNomorBatch = document.getElementById('inputNomorBatch');
+        const inputExpiredDate = document.getElementById('inputExpiredDate');
+        const batchDropdown = document.getElementById('batchDropdown');
+        const obatSelect = document.getElementById('obatSelect');
+        const prefillBatchId = "{{ old('batch_id', $prefill['batch_id'] ?? '') }}";
+
+        function updateForm() {
+            let jenis = jenisMutasiSelect.value;
+
+            if (jenis === 'masuk') {
+                batchBaruContainer.style.display = 'block';
+                pilihBatchContainer.style.display = 'none';
+                inputNomorBatch.setAttribute('required', 'required');
+                inputExpiredDate.setAttribute('required', 'required');
+                batchDropdown.removeAttribute('required');
+            } else if (jenis === 'keluar') {
+                batchBaruContainer.style.display = 'none';
+                pilihBatchContainer.style.display = 'block';
+                inputNomorBatch.removeAttribute('required');
+                inputExpiredDate.removeAttribute('required');
+                batchDropdown.setAttribute('required', 'required');
+            } else {
+                // Opname
+                batchBaruContainer.style.display = 'none';
+                pilihBatchContainer.style.display = 'none';
+                inputNomorBatch.removeAttribute('required');
+                inputExpiredDate.removeAttribute('required');
+                batchDropdown.removeAttribute('required');
+            }
+        }
+
+        // Fungsi menyaring batch secara lokal berdasarkan obat yang dipilih
+        function filterBatchLokal(obatId, selectedBatchId = null) {
+            batchDropdown.innerHTML = '<option value="">-- Pilih Nomor Batch --</option>';
+            
+            if (!obatId) {
+                batchDropdown.innerHTML = '<option value="">-- Pilih Obat Terlebih Dahulu --</option>';
+                return;
+            }
+
+            // Saring array semuaBatch milik obat yang dipilih saja
+            const batchFilter = semuaBatch.filter(b => b.obat_id == obatId);
+
+            if (batchFilter.length === 0) {
+                batchDropdown.innerHTML = '<option value="">-- Tidak ada batch aktif untuk obat ini --</option>';
+                return;
+            }
+
+            batchFilter.forEach(batch => {
+                const isSelected = (selectedBatchId && batch.id == selectedBatchId) ? 'selected' : '';
+                batchDropdown.innerHTML += `<option value="${batch.id}"${isSelected}>Batch: ${batch.nomor_batch} (Exp: ${batch.expired_date} | Stok: ${batch.stok})</option>`;
+            });
+        }
+
+        jenisMutasiSelect.addEventListener('change', updateForm);
+        
+        if (obatSelect) {
+            obatSelect.addEventListener('change', function() {
+                filterBatchLokal(this.value);
+            });
+        }
+
+        updateForm();
+        if (obatSelect && obatSelect.value !== "") {
+            filterBatchLokal(obatSelect.value, prefillBatchId);
+        }
+    });
+</script>
+{{-- <div class="modal fade" id="tambahMutasiModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><b>Tambah Mutasi Stok</b></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ route('backend.stock.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
                     <div class="form-group mb-3">
                         <label class="fw-bold">Pilih Obat <span class="text-danger">*</span></label>
                         <select id="obatSelect" name="obat_id" class="form-select @error('obat_id') is-invalid @enderror" required>
@@ -146,5 +304,5 @@
             width: '100%' // Agar lebar select mengikuti lebar container
         });
     });
-</script>
+</script> --}}
 @endsection

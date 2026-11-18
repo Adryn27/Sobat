@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\BatchObat;
 use App\Models\Obat;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -34,10 +35,17 @@ class AppServiceProvider extends ServiceProvider
                 ->take(5)
                 ->get();
             
+            $batchExpired = BatchObat::with('obat')
+                ->where('stok', '>', 0)
+                ->where('expired_date', '<', now()->format('Y-m-d'))
+                ->orderBy('expired_date', 'asc')
+                ->get();
+
             $view->with([
-                'totalNotif' => $stokKritis->count() + $prioritasTinggi->count(),
+                'totalNotif' => $stokKritis->count() + $prioritasTinggi->count() + $batchExpired->count(),
                 'stokKritis' => $stokKritis,
-                'prioritasTinggi' => $prioritasTinggi
+                'prioritasTinggi' => $prioritasTinggi,
+                'batchExpired' => $batchExpired,
             ]);
         });
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BatchObat;
 use App\Models\Mutasi;
 use App\Models\Obat;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -36,13 +37,21 @@ class MutasiController extends Controller
                     break;
             }
         }
-        $stok= $mutasi->get();
+        $stok= $mutasi->with('batchobat')->get();
         $obat = Obat::all(); 
+        $batches = BatchObat::where('stok', '>', 0)->orderBy('expired_date', 'asc')->get();
+        $prefill = [
+            'obat_id'  => $request->query('obat_id'),
+            'batch_id' => $request->query('batch_id'),
+            'jumlah'   => $request->query('jumlah'),
+        ];
         return view('backend.layout.v_stock.index', [
             'judul' => 'Stock Adjustment',
             'subjudul' => 'Mutasi Stok',
             'index' => $stok,
             'obat' => $obat,
+            'batches' => $batches,
+            'prefill' => $prefill,
         ]);
     }
 
@@ -59,20 +68,116 @@ class MutasiController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(['obat_id' => 'required', 'jumlah' => 'required|numeric', 'jenis' => 'required']);
+        $request->validate([
+            'obat_id' => 'required', 
+            'jumlah' => 'required|numeric', 
+            'jenis' => 'required',
+            'nomor_batch'  => 'nullable|string',
+            'expired_date' => 'nullable|date',
+        ]);
 
         DB::transaction(function () use ($request) {
             $obat = Obat::findOrFail($request->obat_id);
             $stokSebelum = $obat->stok;
+            $catatanFinal = $request->catatan;
             
             if ($request->jenis == 'masuk') {
                 $stokSesudah = $stokSebelum + $request->jumlah;
+
+                $batch = BatchObat::where('obat_id', $obat->id)
+                    ->where('nomor_batch', $request->nomor_batch)
+                    ->first();
+
+                if ($batch) {
+                    $batch->increment('stok', $request->jumlah);
+                } else {
+                    $batch = BatchObat::create([
+                        'tenant_id'    => Auth::user()->tenant_id,
+                        'obat_id'      => $obat->id,
+                        'nomor_batch'  => $request->nomor_batch ?? 'BATCH-' . date('YmdHis'),
+                        'expired_date' => $request->expired_date ?? now()->addYear()->format('Y-m-d'),
+                        'stok'         => $request->jumlah,
+                    ]);
+                }
+                // $batch=BatchObat::create([
+                //     'tenant_id'    => Auth::user()->tenant_id,
+                //     'obat_id'      => $obat->id,
+                //     'nomor_batch'  => $request->nomor_batch ?? 'BATCH-' . date('YmdHis'),
+                //     'expired_date' => $request->expired_date ?? now()->addYear()->format('Y-m-d'),
+                //     'stok'         => $request->jumlah,
+                // ]);
+                $catatanFinal = "[Masuk] Batch: {$batch->nomor_batch} (Exp: {$batch->expired_date}) - " . $request->catatan;
+
             } elseif ($request->jenis == 'keluar') {
-                if ($stokSebelum < $request->jumlah) throw new \Exception("Stok tidak cukup!");
+                $batch = BatchObat::findOrFail($request->batch_obat_id);
+    
+                if ($batch->stok < $request->jumlah) {
+                    return back()->withInput()->with('error', "Stok batch terpilih tidak mencukupi! (Sisa stok batch: {$batch->stok})");
+                }
+
                 $stokSesudah = $stokSebelum - $request->jumlah;
+
+                $batch->decrement('stok', $request->jumlah);
+                $catatanFinal = "[Keluar] Batch: {$batch->nomor_batch} (Exp: {$batch->expired_date}) - " . $request->catatan;
+                // if ($stokSebelum < $request->jumlah) throw new \Exception("Stok tidak cukup!");
+                // $stokSesudah = $stokSebelum - $request->jumlah;
+
+                // $sisaKeluar = $request->jumlah;
+                // $batches = BatchObat::where('obat_id', $obat->id)
+                //     ->where('stok', '>', 0)
+                //     ->orderBy('expired_date', 'asc') 
+                //     ->get();
+                // foreach ($batches as $batch) {
+                //     if ($sisaKeluar <= 0) break;
+
+                //     if ($batch->stok >= $sisaKeluar) {
+                //         $batch->decrement('stok', $sisaKeluar);
+                //         $sisaKeluar = 0;
+                //     } else {
+                //         $sisaKeluar -= $batch->stok;
+                //         $batch->update(['stok' => 0]);
+                //     }
+                // }
+
             } else { 
                 $stokSesudah = $request->jumlah;
-                $request->merge(['jumlah' => abs($stokSesudah - $stokSebelum)]);
+                $selisih = $stokSesudah - $stokSebelum;
+                $request->merge(['jumlah' => abs($selisih)]);
+
+                if ($selisih > 0) {
+                    $batch=BatchObat::create([
+                        'tenant_id'    => Auth::user()->tenant_id,
+                        'obat_id'      => $obat->id,
+                        'nomor_batch'  => 'OPNAME-' . date('Ymd'),
+                        'expired_date' => now()->addYear()->format('Y-m-d'),
+                        'stok'         => $selisih,
+                    ]);
+                    $catatanFinal = "[Opname In] Batch: {$batch->nomor_batch} (Exp: {$batch->expired_date}) - " . $request->catatan;
+                } elseif ($selisih < 0) {
+                    $sisaKurang = abs($selisih);
+                    $batchTerpotongList = [];
+                    $batches = BatchObat::where('obat_id', $obat->id)
+                        ->where('stok', '>', 0)
+                        ->orderBy('expired_date', 'asc')
+                        ->get();
+    
+                    foreach ($batches as $batch) {
+                        if ($sisaKurang <= 0) break;
+    
+                        if ($batch->stok >= $sisaKurang) {
+                            $batch->decrement('stok', $sisaKurang);
+                            $sisaKurang = 0;
+                        } else {
+                            $sisaKurang -= $batch->stok;
+                            $batch->update(['stok' => 0]);
+                        }
+                        $batchTerpotongList[] = $batch->nomor_batch;
+                    }
+                    $infoBatch = count($batchTerpotongList) > 0 ? implode(', ', $batchTerpotongList) : '-';
+                    $catatanFinal = "[Opname Minus] Batch: {$batch->nomor_batch} - " . $request->catatan;
+                } else {
+                    $catatanFinal = "[Opname] Tidak ada selisih stok - " . $request->catatan;
+                }
             }
 
             $dataUpdate = ['stok' => $stokSesudah];
@@ -87,7 +192,7 @@ class MutasiController extends Controller
                 'jenis' => $request->jenis,
                 'stok_sebelum' => $stokSebelum,
                 'stok_sesudah' => $stokSesudah,
-                'catatan' => $request->catatan
+                'catatan' => $catatanFinal
             ]);
 
             $obat->update($dataUpdate);

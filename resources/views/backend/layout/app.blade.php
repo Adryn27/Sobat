@@ -9,7 +9,7 @@
         rel="icon"
         type="image/jpg"
         sizes="32x32"
-        href="{{ asset('Img/LogoB.jpg') }}"
+        href="{{ asset('Img/logo Sobat.png') }}"
     />
 
     <!--begin::Accessibility Meta Tags-->
@@ -131,7 +131,7 @@
           
                   @forelse($stokKritis as $obat)
                       <div class="dropdown-divider"></div>
-                      <a href="#" class="dropdown-item text-danger text-wrap">
+                      <a href="{{ route('backend.stock.index') }}" class="dropdown-item text-danger text-wrap">
                           <i class="bi bi-exclamation-triangle me-2"></i>
                           <strong>{{ $obat->nama_obat }}</strong><br>
                           <small>Stok kritis: sisa {{ $obat->stok }} (di bawah 50% dari maks {{ $obat->stok_maksimal }})</small>
@@ -142,13 +142,26 @@
           
                   @forelse($prioritasTinggi as $obat)
                       <div class="dropdown-divider"></div>
-                      <a href="#" class="dropdown-item text-primary text-wrap">
+                      <a href="{{ route('backend.analysis.index') }}" class="dropdown-item text-primary text-wrap">
                           <i class="bi bi-award me-2"></i>
                           <strong>{{ $obat->nama_obat }}</strong><br>
                           <small>Prioritas Restock: Nilai SAW tinggi berdasarkan performa Volume, Frekuensi, Rasio Stok & Intensitas.</small>
                       </a>
                   @empty
                       {{-- Tidak ada prioritas tinggi --}}
+                  @endforelse
+
+                  @forelse($batchExpired as $batch)
+                      <div class="dropdown-divider"></div>
+                      <a href="{{ route('backend.stock.inven') }}" class="dropdown-item text-danger text-wrap">
+                          <i class="bi bi-calendar-x"></i>
+                          <strong>{{ $batch->obat->nama_obat ?? 'Obat' }}</strong><br>
+                          <small>
+                              Batch: <b>{{ $batch->nomor_batch }}</b> sudah Expired pada {{ date('d-m-Y', strtotime($batch->expired_date)) }} (Sisa: {{ $batch->stok }})
+                          </small>
+                      </a>
+                  @empty
+                      {{-- Obat Kadaluarsa --}}
                   @endforelse
           
                   {{-- Jika tidak ada notifikasi sama sekali --}}
@@ -191,7 +204,109 @@
                 @endif
                 <span class="d-none d-md-inline">Welcome, {{ Auth::user()->nama }}</span>
               </a>
-              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end shadow border-0 rounded-3 overflow-hidden" style="min-width: 280px;">
+    
+                <li class="px-3 py-2 bg-light border-bottom d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center text-truncate pe-2">
+                        <i class="bi bi-shop text-primary me-2 fs-5"></i>
+                        <span class="fw-bold text-dark text-truncate" style="font-size: 0.9rem;">
+                            {{ Auth::user()->tenants->nama_tenant}}
+                        </span>
+                    </div>
+                    
+                    @php
+                        $isApotekAktif = (Auth::user()->tenants->status) == 1; 
+                    @endphp
+            
+                    <span class="d-inline-flex align-items-center badge rounded-pill {{ $isApotekAktif ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger' }}" 
+                          title="{{ $isApotekAktif ? 'Apotek Aktif' : 'Apotek Nonaktif' }}">
+                        <span class="rounded-circle me-1 {{ $isApotekAktif ? 'bg-success' : 'bg-danger' }}" 
+                              style="width: 8px; height: 8px; display: inline-block;"></span>
+                        <span style="font-size: 0.7rem;">{{ $isApotekAktif ? 'Aktif' : 'Nonaktif' }}</span>
+                    </span>
+                </li>
+            
+                <li>
+                    <a href="{{ route('backend.profile') }}" class="dropdown-item p-3 d-flex align-items-center justify-content-between border-bottom">
+                        <div class="d-flex align-items-center overflow-hidden">
+                            <!-- Foto Profil -->
+                            @if (Auth::user()->foto)
+                                <img
+                                    src="{{ asset('storage/img-user/' . Auth::user()->foto) }}"
+                                    alt="user"
+                                    class="rounded-circle shadow-sm me-3 flex-shrink-0"
+                                    style="width: 48px; height: 48px; object-fit: cover;"
+                                />
+                            @else
+                                <img
+                                    src="{{ asset('Img/img-default.jpg') }}"
+                                    alt="user"
+                                    class="rounded-circle shadow-sm me-3 flex-shrink-0"
+                                    style="width: 48px; height: 48px; object-fit: cover;"
+                                />
+                            @endif
+            
+                            <!-- Nama, Role & Email -->
+                            <div class="text-truncate">
+                                <div class="fw-bold text-dark text-truncate mb-0">
+                                    {{ Auth::user()->nama }}
+                                </div>
+                                <div class="small text-muted text-truncate">
+                                    {{ Auth::user()->email }}
+                                </div>
+                                @if (Auth::user()->role == '2')
+                                <span class="badge rounded-pill fw-bold bg-warning-subtle text-warning-emphasis mt-1" style="font-size: 0.75rem; padding: 6px 12px;">
+                                    <i class="bi bi-award-fill me-1"></i> Pemilik
+                                </span>
+                                @elseif (Auth::user()->role == '1')
+                                <span class="badge rounded-pill fw-bold bg-secondary-subtle text-secondary mt-1" style="font-size: 0.75rem; padding: 6px 12px;">
+                                    <i class="bi bi-person-badge-fill me-1"></i> Admin
+                                </span>
+                                @elseif (Auth::user()->role == '3')
+                                <span class="badge rounded-pill fw-bold bg-primary-subtle text-primary-emphasis mt-1" style="font-size: 0.75rem; padding: 6px 12px;">
+                                    <i class="bi bi-capsule-pill me-1"></i> Apoteker
+                                </span>
+                                @elseif (Auth::user()->role == '4')
+                                <span class="badge rounded-pill fw-bold bg-danger-subtle text-danger-emphasis mt-1" style="font-size: 0.75rem; padding: 6px 12px;">
+                                    <i class="bi bi-box-seam-fill me-1"></i> Kepala Gudang
+                                </span>
+                                @endif
+                                {{-- <span class="badge bg-primary-subtle text-primary mt-1" style="font-size: 0.7rem;">
+                                    @if (Auth::user()->role == '3')
+                                        Apoteker
+                                    @elseif (Auth::user()->role == '1')
+                                        Admin
+                                    @elseif (Auth::user()->role == '2')
+                                        Pemilik
+                                    @elseif (Auth::user()->role == '4')
+                                        Kepala Gudang
+                                    @endif
+                                </span> --}}
+                            </div>
+                        </div>
+            
+                        <!-- Tanda Panah (>) -->
+                        <i class="bi bi-chevron-right text-muted ms-2"></i>
+                    </a>
+                </li>
+            
+                <!-- 3. TOMBOL SIGN OUT -->
+                <li class="p-2 bg-white">
+                    <a href="#" class="btn btn-outline-danger btn-sm w-100 d-flex align-items-center justify-content-center show_confirm_logout">
+                        <i class="bi bi-box-arrow-right me-2"></i> Sign out
+                    </a>
+                    
+                    <form
+                        id="logout-form"
+                        action="{{ route('backend.logout') }}"
+                        method="POST"
+                        class="d-none"
+                    >
+                        @csrf
+                    </form>
+                </li>
+            </ul>
+              {{-- <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                   @if (Auth::user()->foto)
@@ -241,7 +356,7 @@
                   </form>
                 </li>
                 <!--end::Menu Footer-->
-              </ul>
+              </ul> --}}
             </li>
             <!--end::User Menu Dropdown-->
           </ul>
@@ -255,16 +370,18 @@
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="../index.html" class="brand-link">
+          <a href="{{ route('backend.beranda') }}" class="brand-link">
             <!--begin::Brand Image-->
-            <img
-              src="{{ asset('Img/logo.png') }}"
-              alt="Sapphire Logo"
-              class="brand-image opacity-75 shadow rounded-circle"
-            />
+            <span class="brand-image bg-white rounded-3 d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 34px; height: 34px; padding: 3px;">
+              <img 
+                  src="{{ asset('Img/logo Sobat.png') }}" 
+                  alt="Sobat Logo" 
+                  style="width: 100%; height: 100%; object-fit: contain;"
+              />
+            </span>
+            <span class="brand-text fw-bold ms-2">SOBAT Apotek</span>
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
-            <span class="brand-text fw-light">Inventaris Apotek</span>
             <!--end::Brand Text-->
           </a>
           <!--end::Brand Link-->
@@ -404,12 +521,14 @@
       <!--begin::Footer-->
       <footer class="app-footer">
         <!--begin::To the end-->
-        <div class="float-end d-none d-sm-inline">{{ Auth::user()->tenants->nama_tenant}}</div>
+        <div class="float-end d-none d-sm-inline">
+          <img src="{{ asset('img/logo Sobat.png') }}" alt="Logo Sobat" height="25" class="me-2">
+        </div>
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
           Copyright &copy; 2026&nbsp;
-          <a href="https://www.instagram.com/adryn_w/" class="text-decoration-none">adryn_w</a>.
+          <a href="https://github.com/Adryn27/Sobat" class="text-decoration-none">Sobat Apotek</a>.
         </strong>
         All rights reserved.
         <!--end::Copyright-->

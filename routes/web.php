@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/', function () {
-    return redirect()->route('backend.login');
+    return view('sobat');
 });
 
 //Register

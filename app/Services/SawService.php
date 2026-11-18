@@ -48,6 +48,8 @@ class SawService
             // C3 Rasio Stok (Cost)
             $stokMin = $obat->stok_maksimal * 0.5;
             $c3 = $stokMin > 0 ? ($obat->stok / $stokMin) : 0;
+            // $rawC3   = $stokMin > 0 ? ($obat->stok / $stokMin) : 0;
+            // $c3      = max($rawC3, 0.01);
 
 
             $matrix[$obat->id] = compact('c1','c2','c3');
@@ -72,6 +74,7 @@ class SawService
 
             // COST
             $r3 = $m['c3'] > 0 ? ($minC3 / $m['c3']) : 1;
+            // $r3 = $minC3 / $m['c3'];
 
             // NILAI AKHIR
             $saw =  ($r1 * $bobot->c1_volume) +

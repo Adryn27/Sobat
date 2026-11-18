@@ -161,13 +161,13 @@
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <div class="form-group mb-2">
+                            {{-- <div class="form-group mb-2">
                                 <label class="fw-bold">Stok Awal <span class="text-danger">*</span></label>
                                 <input type="number" name="stok" class="form-control @error('stok') is-invalid @enderror" value="{{ old('stok', 0) }}" required>
                                 @error('stok')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
-                            </div>
+                            </div> --}}
                             <div class="form-group mb-2">
                                 <label class="fw-bold">Kapasitas Stok Maksimal <span class="text-danger">*</span></label>
                                 <input type="number" name="stok_maksimal" class="form-control @error('stok_maksimal') is-invalid @enderror" value="{{ old('stok_maksimal', 100) }}" required>
@@ -336,7 +336,7 @@
 
                     <div class="text-muted mb-2 lh-sm p-2 rounded alert alert-warning border border-warning-subtle small">
                         <span class="fw-bold"><i class="bi bi-info-circle-fill"></i> Susunan Header Kolom:</span><br>
-                        <code>merchant_sku</code> | <code>product_name</code> | <code>category</code> | <code>unit</code> | <code>base_price</code> | <code>selling_price</code> | <code>stock_available</code>
+                        <code>merchant_sku</code> | <code>product_name</code> | <code>category</code> | <code>unit</code> | <code>base_price</code> | <code>selling_price</code> 
                     </div>
                 </div>
                 

@@ -30,4 +30,9 @@ class Obat extends Model
     {
         return $this->hasMany(Mutasi::class, 'obat_id', 'id');
     }
+
+    public function batches()
+    {
+        return $this->hasMany(BatchObat::class, 'obat_id');
+    }
 }

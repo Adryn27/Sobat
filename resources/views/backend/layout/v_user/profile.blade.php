@@ -48,11 +48,11 @@
                                     <i class="bi bi-person-badge-fill me-1"></i> Admin
                                 </span>
                                 @elseif ($index->role == '3')
-                                <span class="badge rounded-pill fw-bold bg-warning-subtle text-warning-emphasis" style="font-size: 0.75rem; padding: 6px 12px;">
+                                <span class="badge rounded-pill fw-bold bg-primary-subtle text-primary-emphasis" style="font-size: 0.75rem; padding: 6px 12px;">
                                     <i class="bi bi-capsule-pill me-1"></i> Apoteker
                                 </span>
                                 @elseif ($index->role == '4')
-                                <span class="badge rounded-pill fw-bold bg-warning-subtle text-warning-emphasis" style="font-size: 0.75rem; padding: 6px 12px;">
+                                <span class="badge rounded-pill fw-bold bg-danger-subtle text-danger-emphasis" style="font-size: 0.75rem; padding: 6px 12px;">
                                     <i class="bi bi-box-seam-fill me-1"></i> Kepala Gudang
                                 </span>
                                 @endif

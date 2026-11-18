@@ -44,7 +44,7 @@ class LoginController extends Controller
             return back()->withErrors(['email' => 'Akun belum aktif'])->withInput();
         }
 
-        if ($user->tenant_id && (!$user->tenants || !$user->tenants->status)) {
+        if ($user->role != '2' && $user->tenant_id && (!$user->tenants || !$user->tenants->status)) {
             return back()->withErrors(['email' => 'Akun apotek Anda belum aktif.'])->withInput();
         }
 

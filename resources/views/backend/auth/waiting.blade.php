@@ -120,7 +120,7 @@
                     </div>
                     
                     <div>
-                        <h1 class="fw-bold display-6 mb-1 tracking-wide">Sobat</h1>
+                        <h1 class="fw-bold display-6 mb-1 tracking-wide">SOBAT</h1>
                         <p class="fs-5 text-white-50 mb-0">Sistem Operasional Barang Apotek Terintegrasi</p>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\PenjualanExport;
 use App\Imports\PenjualanImport;
+use App\Models\BatchObat;
 use App\Models\DetailPenjualan;
 use App\Models\Mutasi;
 use App\Models\Obat;
@@ -87,6 +88,31 @@ class KasirController extends Controller
                     ]);
                     //Perubahan
                     $stokSebelum = $obat->stok;
+
+                    $sisaQty = $request->jumlah[$key];
+
+                    $batches = BatchObat::where('obat_id', $med_id)
+                        ->where('stok', '>', 0)
+                        ->whereDate('expired_date', '>=', now()->toDateString())
+                        ->orderBy('expired_date', 'asc')
+                        ->get();
+
+                    foreach ($batches as $batch) {
+                        if ($sisaQty <= 0) break;
+
+                        if ($batch->stok >= $sisaQty) {
+                            $batch->decrement('stok', $sisaQty);
+                            $sisaQty = 0;
+                        } else {
+                            $terpakai = $batch->stok;
+                            $sisaQty -= $terpakai;
+                            $batch->update(['stok' => 0]);
+                        }
+                    }
+
+                    if ($sisaQty > 0) {
+                        throw new \Exception("Gagal! Stok batch fisik untuk obat {$obat->nama_obat} tidak mencukupi.");
+                    }
 
                     $obat->decrement('stok', $request->jumlah[$key]);
 

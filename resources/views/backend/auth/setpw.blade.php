@@ -8,7 +8,7 @@
         rel="icon"
         type="image/jpg"
         sizes="32x32"
-        href="{{ asset('Img/LogoB.jpg') }}"
+        href="{{ asset('Img/logo Sobat.png') }}"
     />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -139,7 +139,7 @@
                 <div class="mb-4">
                     <div class="d-md-none d-flex align-items-center gap-2 mb-3">
                         <img src="{{ asset('Img/logo.png') }}" alt="Logo" class="rounded-3" style="width: 32px; height: 32px;">
-                        <span class="fw-bold fs-5 text-dark">Sapphire Farma</span>
+                        <span class="fw-bold fs-5 text-dark">SOBAT</span>
                     </div>
                     <h3 class="fw-bold text-dark mb-1 fs-4">Atur Kata Sandi</h3>
                     <p class="small text-muted mb-0">Buat kata sandi baru untuk mengaktifkan akun staf Anda.</p>
@@ -235,8 +235,8 @@
                     </div>
                     
                     <div>
-                        <h1 class="fw-bold display-6 mb-1 tracking-wide">Apotek Sapphire Farma</h1>
-                        <p class="fs-5 text-white-50 mb-0">Sistem Inventaris Apotek</p>
+                        <h1 class="fw-bold display-6 mb-1 tracking-wide">SOBAT</h1>
+                        <p class="fs-5 text-white-50 mb-0">Sistem Operasional Barang Apotek Terintegrasi</p>
                     </div>
                 </div>
             </div>

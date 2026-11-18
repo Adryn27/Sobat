@@ -52,16 +52,16 @@ class ObatController extends Controller
             'satuan'        => 'required|in:0,1,2',
             'harga_offline' => 'required|numeric|min:0',
             'harga_online'  => 'required|numeric|min:0',
-            'stok'          => 'required|integer|min:0',
+            // 'stok'          => 'required|integer|min:0',
             'stok_maksimal' => 'required|integer|min:1',
             'pemasok_id'   => 'required|exists:pemasok,id',
         ]);
 
-        $stokAwal = $request->stok;
-        $stokMax = $request->stok_maksimal;
-        $finalStokMax = ($stokAwal > $stokMax) ? $stokAwal : $stokMax;
+        // $stokAwal = $request->stok;
+        // $stokMax = $request->stok_maksimal;
+        // $finalStokMax = ($stokAwal > $stokMax) ? $stokAwal : $stokMax;
 
-        DB::transaction(function () use ($request, $finalStokMax) {
+        DB::transaction(function () use ($request) {
             $obat = Obat::create([
                 'kode_obat'     => trim($request->kode_obat),
                 'nama_obat'     => ucwords(strtolower(trim($request->nama_obat))),
@@ -69,22 +69,22 @@ class ObatController extends Controller
                 'satuan'        => $request->satuan,
                 'harga_offline' => $request->harga_offline,
                 'harga_online'  => $request->harga_online,
-                'stok'          => $request->stok,
-                'stok_maksimal' => $finalStokMax, // Simpan nilai yang sudah di-adjust
+                // 'stok'          => $request->stok,
+                'stok_maksimal' => $request->stok_maksimal, // Simpan nilai yang sudah di-adjust
                 'pemasok_id'    => $request->pemasok_id,
             ]);
 
-            if ($request->stok > 0) {
-                Mutasi::create([
-                    'obat_id'      => $obat->id,
-                    'user_id'      => Auth::id(),
-                    'jumlah'       => $request->stok,
-                    'jenis'        => 'masuk',
-                    'stok_sebelum' => 0,
-                    'stok_sesudah' => $request->stok,
-                    'catatan'      => 'Stok Awal Penambahan Obat',
-                ]);
-            }
+            // if ($request->stok > 0) {
+            //     Mutasi::create([
+            //         'obat_id'      => $obat->id,
+            //         'user_id'      => Auth::id(),
+            //         'jumlah'       => $request->stok,
+            //         'jenis'        => 'masuk',
+            //         'stok_sebelum' => 0,
+            //         'stok_sesudah' => $request->stok,
+            //         'catatan'      => 'Stok Awal Penambahan Obat',
+            //     ]);
+            // }
         });
         //Perubahan (Variabel)
         // $obat=Obat::create([

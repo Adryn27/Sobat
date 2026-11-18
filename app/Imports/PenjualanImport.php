@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\BatchObat;
 use App\Models\DetailPenjualan;
 use App\Models\Mutasi;
 use App\Models\Obat;
@@ -170,6 +171,32 @@ class PenjualanImport implements ToCollection, WithHeadingRow
                     ]);
                     //Perubahan
                     $stokSebelum = $obat->stok;
+
+                    $sisaQty = $jumlah;
+
+                    $batches = BatchObat::where('obat_id', $obat->id)
+                        ->where('stok', '>', 0)
+                        ->whereDate('expired_date', '>=', now()->toDateString())
+                        ->orderBy('expired_date', 'asc')
+                        ->get();
+
+                    foreach ($batches as $batch) {
+                        if ($sisaQty <= 0) break;
+
+                        if ($batch->stok >= $sisaQty) {
+                            $batch->decrement('stok', $sisaQty);
+                            $sisaQty = 0;
+                        } else {
+                            $terpakai = $batch->stok;
+                            $sisaQty -= $terpakai;
+                            $batch->update(['stok' => 0]);
+                        }
+                    }
+
+                    if ($sisaQty > 0) {
+                        throw new \Exception("Gagal Import! Stok fisik batch untuk obat {$obat->nama_obat} pada Invoice {$noInvoice} tidak mencukupi.");
+                    }
+
                     $stokSesudah = $stokSebelum - $jumlah;
                     Mutasi::create([
                         'obat_id'      => $obat->id,

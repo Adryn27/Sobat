@@ -8,7 +8,7 @@
         rel="icon"
         type="image/jpg"
         sizes="32x32"
-        href="{{ asset('Img/LogoB.jpg') }}"
+        href="{{ asset('Img/logo Sobat.png') }}"
     />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,7 +109,7 @@
             
             <div class="text-center mb-4">
                 <div class="d-inline-flex align-items-center justify-content-center border border-light rounded-3 p-2 bg-light mb-3" style="width: 64px; height: 64px;">
-                    <img src="{{ asset('Img/LogoB.jpg') }}" alt="Sapphire Farma Logo" class="img-fluid rounded-3">
+                    <img src="{{ asset('Img/logo.png') }}" alt="Sapphire Farma Logo" class="img-fluid rounded-3">
                 </div>
                 <h4 class="fw-bold text-dark mb-1">Atur Ulang Kata Sandi</h4>
                 <p class="small text-muted mb-0">Masukkan kata sandi baru untuk akun staf Anda.</p>
@@ -191,7 +191,7 @@
 
             <div class="mt-4 pt-3 border-top border-light text-center">
                 <p class="small text-muted mb-0" style="font-size: 0.75rem;">
-                    Apotek Sapphire Farma &copy; {{ date('Y') }}
+                    Sobat Apotek &copy; {{ date('Y') }}
                 </p>
             </div>
 

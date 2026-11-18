@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $judul}}</title>
-    <link rel="icon" type="image/jpg" sizes="32x32" href="{{ asset('Img/LogoB.jpg') }}" />
+    <link rel="icon" type="image/jpg" sizes="32x32" href="{{ asset('Img/logo Sobat.png') }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -145,7 +145,7 @@
                 <div class="mb-4">
                     <div class="d-md-none d-flex align-items-center gap-2 mb-3">
                         <img src="{{ asset('Img/logo.png') }}" alt="Logo" class="rounded-3" style="width: 32px; height: 32px;">
-                        <span class="fw-bold fs-5 text-dark">Sedia</span>
+                            <h4 class="fw-bold fs-5 mb-0 tracking-wide" style="color: #0b2d48;">SOBAT</h4>
                     </div>
                     <h3 class="fw-bold text-dark mb-1 fs-4">Daftarkan Apotek Anda</h3>
                     <p class="small text-muted mb-0">Lengkapi profil apotek dan akun pemilik untuk mulai mengelola inventaris.</p>
@@ -175,7 +175,7 @@
                                 </div>
                                 <input type="text" id="nama_tenant" name="nama_tenant" value="{{ old('nama_tenant') }}" required
                                     class="form-control input-field-custom @error('nama_tenant') is-invalid @enderror"
-                                    placeholder="Contoh: Apotek Sapphire Farma">
+                                    placeholder="Contoh: Sobat Apotek">
                             </div>
                             @error('nama_tenant')
                                 <span class="invalid-feedback ps-1">{{ $message }}</span>
@@ -317,8 +317,8 @@
                     </div>
                     
                     <div>
-                        <h1 class="fw-bold display-6 mb-2 tracking-wide">Sobat</h1>
-                        <p class="fs-6 text-white-50 mb-4">Platform Manajemen Inventaris &amp; Operasional Apotek Terintegrasi</p>
+                        <h1 class="fw-bold display-6 mb-2 tracking-wide">SOBAT</h1>
+                        <p class="fs-6 text-white-50 mb-4">Sistem Operasional Barang Apotek Terintegrasi</p>
                     </div>
 
                     <div class="text-start bg-white bg-opacity-10 rounded-4 p-3 w-100 border border-white border-opacity-10">
@@ -332,7 +332,7 @@
                         </div>
                         <div class="d-flex align-items-center gap-2 small">
                             <i class="fa-solid fa-circle-check text-info"></i>
-                            <span>Pantau stok obat fast moving</span>
+                            <span>Pantau stok &amp; kadaluarsa obat</span>
                         </div>
                     </div>
                 </div>
